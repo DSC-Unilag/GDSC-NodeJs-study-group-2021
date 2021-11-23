@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, 'Please provide a password'],
       minlength: 8,
-      select: false,
+      select: true,
     },
     passwordConfirm: {
       type: String,
@@ -43,24 +43,24 @@ const userSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-userSchema.pre('save', async function (next) {
-  //If password is not modified then skip
+// Check if password entered for login is the same as the actual user's hashed password
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+userSchema.pre('save', function (next) {
   if (!this.isModified('password')) {
-    return next();
+    next();
   }
 
-  //if password is modified then change hash the password and save it.
-  //also remove the passwordConfirm.
   const user = this;
+
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(user.password, salt, (err, hash) => {
-      if (err) throw err;
       user.password = hash;
       next();
     });
   });
-
-  next();
 });
 
 module.exports = mongoose.model(USER, userSchema);

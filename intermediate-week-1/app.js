@@ -4,6 +4,7 @@ const cors = require('cors');
 const errorHandler = require('./error/errorHandler');
 const AppError = require('./error/appError');
 const morgan = require('morgan');
+const { provideErrorHandler } = require('./middlewares/errorHandler');
 
 //getting all routes
 const authRoutes = require('./routes/auth');
@@ -13,8 +14,9 @@ const app = express();
 
 //setting up app middlewares
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+app.use(provideErrorHandler);
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));

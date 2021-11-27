@@ -23,11 +23,16 @@ const userSchema = mongoose.Schema(
       trim: true,
       validate: [validator.isEmail, 'Please provide a valid email'],
     },
+    // token: {
+    //   type: String,
+    //   default: null,
+    //   // select: false,
+    // },
     password: {
       type: String,
       required: [true, 'Please provide a password'],
       minlength: 8,
-      select: true,
+      select: false,
     },
     passwordConfirm: {
       type: String,

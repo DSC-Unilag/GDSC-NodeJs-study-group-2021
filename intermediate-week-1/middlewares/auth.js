@@ -10,7 +10,7 @@ exports.requireSignIn = async (req, res, next) => {
     if (authorization && authorization.startsWith('Bearer')) {
       token = authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded._id).select('-password');
+      res.user = await User.findById(decoded._id);
       next();
     }
   } catch (error) {

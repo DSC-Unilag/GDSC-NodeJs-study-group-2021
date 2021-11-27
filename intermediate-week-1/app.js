@@ -14,7 +14,7 @@ const app = express();
 
 //setting up app middlewares
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(provideErrorHandler);
 

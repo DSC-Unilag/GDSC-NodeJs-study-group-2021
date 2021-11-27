@@ -3,16 +3,13 @@ const User = require('../../models/User');
 const getUserInfo = async (req, res, next) => {
   //gets info about the logged in user
   try {
-    const users = await User.find({}).select('-password -createdAt -updatedAt -__v');
+    const { firstName, lastName, email } = res.user;
 
-    if (!users) {
-      return res.sendApiError({
-        status: 404,
-        title: 'Missing data!',
-        detail: 'No user found',
-      });
-    }
-    return res.json(users);
+    return res.json({
+      firstName,
+      lastName,
+      email,
+    });
   } catch (error) {
     return res.mongoError(error);
   }

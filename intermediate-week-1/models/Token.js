@@ -8,6 +8,7 @@ const tokenSchema = mongoose.Schema(
     token: {
       type: String,
       default: null,
+      required: [true, 'token is required!'],
       // select: false,
     },
     user: {

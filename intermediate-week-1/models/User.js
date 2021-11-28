@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const constants = require('../utils/constants');
+const bcrypt = require('bcrypt')
 
 const { USER } = constants.mongooseModels;
 
@@ -49,9 +50,17 @@ userSchema.pre('save', async function (next) {
   }
 
   //if password is modified then change hash the password and save it.
+  this.password = await bcrypt.hash(this.password, 8) 
   //also remove the passwordConfirm.
+  this.passwordConfirm = undefined;
 
   next();
 });
+
+
+userSchema.methods.compareSecurePassword = function compareSecurePasswords(password) {
+  const user = this;
+  return bcrypt.compareSync(password, user.password);
+};
 
 module.exports = mongoose.model(USER, userSchema);

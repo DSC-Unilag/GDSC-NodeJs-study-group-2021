@@ -1,3 +1,15 @@
+const jwt = require('jsonwebtoken')
+
+
+const signToken = id =>{
+   return token = jwt.sign({id}, process.env.JWT_SECRET,{expiresIn:  process.env.JWT_EXPIRES})
+ 
+ }
+ 
+ const createSendToken =(user) => {
+   const accessToken = signToken(user._id)
+   return accessToken
+ }
 const refreshAccessToken = async (req, res, next) => {
   /**
      * Takes a parameter 
@@ -12,6 +24,17 @@ const refreshAccessToken = async (req, res, next) => {
         refreshToken: *********
      * }
      */
-};
+      const {refreshToken} = req.body;
+      jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET,(err,user)=>{
+         if(err) return res.sendStatus(403)
+         const accessToken = createSendToken(user)
+         res.status(200).json({
+            accessToken,
+            refreshToken     
+         })
+      })
+
+      
+   };
 
 module.exports = refreshAccessToken;

@@ -1,13 +1,11 @@
+const User = require('./../../models/User')
+
 const getUserInfo = async (req, res, next) => {
-  //gets info about the logged in user
-  /**
-   * return a response in the form
-   * {
-   *      firstName:**************,
-   *      lastName: **************,
-   *      email: *****************
-   * }
-   */
+  const user = await User.findById(req.user._id, 'firstName lastName email')
+  
+  res.status(200).json(
+    user
+  )
 };
 
 module.exports = getUserInfo;

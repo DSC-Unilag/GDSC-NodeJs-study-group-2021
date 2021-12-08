@@ -1,17 +1,22 @@
 const User = require('../../models/User');
-const errorHandler = require('../../error/errorHandler');
+const AppError = require('../../error/appError');
 
 const signup = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password, passwordConfirm } = req.body;
 
+    if (!email) {
+      return next(new AppError('email is required', 400));
+    }
+
+    if (!password || !passwordConfirm) {
+      return next(new AppError('password and password confirm are required', 400));
+    }
+
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res.sendApiError({
-        title: 'Existing data!',
-        detail: 'User exists!',
-      });
+      return next(new AppError('User with this email already exists!', 400));
     }
 
     const user = User({
@@ -25,17 +30,14 @@ const signup = async (req, res, next) => {
     const createdUser = await user.save();
 
     if (!createdUser) {
-      return res.sendApiError({
-        title: 'ERROR!',
-        detail: 'Unable to create user!',
-      });
+      return next(new AppError('Unable to create user!', 400));
     } else {
       return res.status(201).json({
         message: 'Stored user details successfully',
       });
     }
   } catch (error) {
-    return errorHandler(error, req, res, next);
+    return res.mongoError(error);
   }
 };
 

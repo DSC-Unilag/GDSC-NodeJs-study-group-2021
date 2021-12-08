@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const errorHandler = require('../../error/errorHandler');
 const User = require('../../models/User');
 const Token = require('../../models/Token');
+const AppError = require('../../error/appError');
 const { generateAccessToken } = require('../../utils/generateToken');
 
 const refreshAccessToken = async (req, res, next) => {
@@ -15,11 +15,7 @@ const refreshAccessToken = async (req, res, next) => {
     }
     const token = await Token.findOne({ token: refreshToken });
     if (!token) {
-      return res.sendApiError({
-        status: 404,
-        title: 'Invalid data!',
-        detail: 'Enter a valid token!',
-      });
+      return next(new AppError('Token not found. Please log in again', 404));
     }
     const user = await User.findOne({ _id: token.user });
     if (!user) {
@@ -36,7 +32,7 @@ const refreshAccessToken = async (req, res, next) => {
       refreshToken,
     });
   } catch (error) {
-    return errorHandler(error, req, res, next);
+    return res.mongoError(error);
   }
 
   /**

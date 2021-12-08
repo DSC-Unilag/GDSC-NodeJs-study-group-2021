@@ -1,11 +1,16 @@
 const User = require('../../models/User');
 const Token = require('../../models/Token');
-const errorHandler = require('../../error/errorHandler');
 const { generateAccessToken, generateRefreshToken } = require('../../utils/generateToken');
+const AppError = require('../../error/appError');
+
 
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return next(new AppError('email and password are required', 400));
+    }
 
     const user = await User.findOne({ email }).select('+password');
 
@@ -25,15 +30,11 @@ const login = async (req, res, next) => {
 
       // next();
     } else {
-      return res.sendApiError({
-        status: 404,
-        title: 'Invalid data!',
-        detail: 'Invalid email or password',
-      });
+      return next(new AppError('User with email not found', 404));
     }
   } catch (error) {
-    return errorHandler(error, req, res, next);
+    return res.mongoError(error);
   }
-};
+}
 
 module.exports = login;

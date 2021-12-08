@@ -18,8 +18,10 @@
   },
   "homepage": "https://github.com/Ose-4g/GDSC-nodejs-study-group#readme",
   "lint-staged": {
-    "*.{js,jsx}": [
-      "prettier --write intermediate-week-1"
+    "*.{js,jsx,ts}": [
+      "prettier --write intermediate-week-1",
+      "prettier --write intermediate-week2-3",
+      "prettier --write beginner-week2-3"
     ]
   },
   "devDependencies": {

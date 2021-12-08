@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const errorHandler = require('../error/errorHandler');
 const User = require('../models/User');
 
 exports.requireSignIn = async (req, res, next) => {
@@ -14,7 +13,7 @@ exports.requireSignIn = async (req, res, next) => {
       next();
     }
   } catch (error) {
-    return errorHandler(error, req, res, next);
+    return res.mongoError(error);
   }
 
   if (!token) {
@@ -24,9 +23,4 @@ exports.requireSignIn = async (req, res, next) => {
       detail: 'Not authorized, no token',
     });
   }
-
-  /**
-   * veify the token and verify if user is logged in in or not
-   * If user is logged in then call the next() function to go to the next middleware
-   */
 };

@@ -11,6 +11,7 @@ const USER = {
   lastName: 'Itua',
   email: 'testemail@gmail.com',
   password: 'testPassword789##',
+  passwordConfirm: 'testPassword789##',
 };
 
 let accessToken;

@@ -10,3 +10,6 @@ settings.json
 .nyc_output
 coverage
 .idea/
+temp_auto_push.bat
+temp_interactive_push.bat
+branch_structure.json

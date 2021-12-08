@@ -49,7 +49,6 @@ const getJoke = async () => {
   const { data } = await axios.get(URL);
   return data.joke;
 };
-writeToFile(3, 100);
 
 module.exports = {
   isPrime,

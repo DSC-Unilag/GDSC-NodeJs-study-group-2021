@@ -4,6 +4,9 @@ import { Response, NextFunction } from 'express';
 import AppError from '../../error/appError';
 import { CustomRequest } from '../user/getUserInfo';
 
+// Request: PUT
+// To: /quote/:id
+// Desc: endpoint for updating a quote based on specified id
 const updateQuote = async (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;

@@ -5,6 +5,9 @@ import AppError from '../../error/appError';
 import { generateAccessToken } from '../../utils/token';
 import jwt from 'jsonwebtoken';
 
+// Request: POST
+// To: /auth/refresh-token
+// Desc: endpoint to refresh access token and generatea new one
 const refreshAccessToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { refreshToken }: { refreshToken: string } = req.body;

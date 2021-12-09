@@ -5,6 +5,9 @@ import AppError from '../../error/appError';
 import bcrypt from 'bcryptjs';
 import { generateAccessToken, generateRefreshToken } from '../../utils/token';
 
+// Request: POST
+// To: /auth/login
+// Desc: endpoint for user login
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password }: { email: string; password: string } = req.body;

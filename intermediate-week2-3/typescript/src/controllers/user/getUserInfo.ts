@@ -5,6 +5,9 @@ export interface CustomRequest extends Request {
   user?: IUser;
 }
 
+// Request: GET
+// To: /user/
+// Desc: endpoint to get information about logged in user
 const getUserInfo = (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
     const { firstName, lastName, email } = req.user as IUser;

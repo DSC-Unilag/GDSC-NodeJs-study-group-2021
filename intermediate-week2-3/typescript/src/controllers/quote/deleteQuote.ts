@@ -4,6 +4,9 @@ import { Response, NextFunction } from 'express';
 import AppError from '../../error/appError';
 import { CustomRequest } from '../user/getUserInfo';
 
+// Request: DELETE
+// To: /quote/:id
+// Desc: endpoint for deleting a quote based on specified id
 const deleteQuote = async (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;

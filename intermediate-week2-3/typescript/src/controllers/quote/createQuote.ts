@@ -3,6 +3,9 @@ import { Response, NextFunction } from 'express';
 import AppError from '../../error/appError';
 import { CustomRequest } from '../user/getUserInfo';
 
+// Request: POST
+// To: /quote/
+// Desc: endpoint for creating a post
 const createQuote = async (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
     const { quote }: { quote: string } = req.body;

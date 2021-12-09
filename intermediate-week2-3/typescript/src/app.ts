@@ -5,7 +5,6 @@ import cors from 'cors';
 import errorHandler from './error/errorHandler';
 import AppError from './error/appError';
 import morgan from 'morgan';
-import { provideErrorHandler } from './middlewares/errorHandler';
 
 //getting all routes
 import authRoutes from './routes/auth';
@@ -41,6 +40,5 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 //error handler
 app.use(errorHandler);
-app.use(provideErrorHandler);
 
 export default app;

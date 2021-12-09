@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 
 const refreshAccessToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { refreshToken } = req.body;
+    const { refreshToken }: { refreshToken: string } = req.body;
 
     if (!refreshToken) {
       return next(new AppError('Provide a valid token', 400));
@@ -36,7 +36,7 @@ const refreshAccessToken = async (req: Request, res: Response, next: NextFunctio
       }
     });
   } catch (error) {
-    throw error;
+    return next(error);
   }
 };
 

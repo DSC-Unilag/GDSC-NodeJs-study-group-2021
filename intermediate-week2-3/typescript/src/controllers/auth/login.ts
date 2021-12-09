@@ -7,7 +7,7 @@ import { generateAccessToken, generateRefreshToken } from '../../utils/token';
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password } = req.body;
+    const { email, password }: { email: string; password: string } = req.body;
 
     if (!email || !password) {
       return next(new AppError('email and password are required', 400));
@@ -35,7 +35,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       return next(new AppError('Invalid email or password', 400));
     }
   } catch (error) {
-    throw error;
+    return next(error);
   }
 };
 

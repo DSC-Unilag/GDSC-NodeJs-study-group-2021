@@ -1,9 +1,10 @@
 import AppError from '../error/appError';
 import jwt from 'jsonwebtoken';
 import User, { IUser } from '../models/User';
-import { RequestHandler } from 'express';
+import { Response, NextFunction } from 'express';
+import { CustomRequest } from '../controllers/user/getUserInfo';
 
-const requireSignIn: RequestHandler = async (req, res, next) => {
+const requireSignIn = async (req: CustomRequest, res: Response, next: NextFunction) => {
   const authorization = req.headers.authorization;
 
   if (!authorization) {
@@ -23,20 +24,20 @@ const requireSignIn: RequestHandler = async (req, res, next) => {
   jwt.verify(token, process.env.JWT_SECRET as string, async function (err, decoded) {
     if (err) {
       next(err);
+    } else if (decoded) {
+      const { _id } = decoded;
+
+      try {
+        const user = await User.findById(_id);
+
+        req.user = user as IUser; //normally this line would not work. thats why we used the custom.d.ts file.
+        //try looking in it to see what we did.
+      } catch (error) {
+        return next(error);
+      }
+
+      next();
     }
-
-    const { id } = decoded;
-
-    try {
-      const user = await User.findById(id);
-
-      req.user = user as IUser; //normally this line would not work. thats why we used the custom.d.ts file.
-      //try looking in it to see what we did.
-    } catch (error) {
-      return next(error);
-    }
-
-    next();
   });
 };
 

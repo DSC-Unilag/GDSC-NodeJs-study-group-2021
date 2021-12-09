@@ -7,7 +7,13 @@ import AppError from '../../error/appError';
 // Desc: endpoint for user registration
 const signup = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { firstName, lastName, email, password, passwordConfirm } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      passwordConfirm,
+    }: { firstName: string; lastName: string; email: string; password: string; passwordConfirm: string } = req.body;
 
     if (!email) {
       return next(new AppError('email is required', 400));
@@ -41,8 +47,7 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
     await user.save();
     return res.status(201).json({ message: 'Stored user details successfully' });
   } catch (error) {
-    throw error;
-    return;
+    return next(error);
   }
 };
 

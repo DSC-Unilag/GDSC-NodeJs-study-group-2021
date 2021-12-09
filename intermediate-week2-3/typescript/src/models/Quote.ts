@@ -25,4 +25,4 @@ const quoteSchema = new Schema<IQuote>(
 
 const Quote: Model<IQuote> = model<IQuote>(QUOTE, quoteSchema);
 
-export default QUOTE;
+export default Quote;

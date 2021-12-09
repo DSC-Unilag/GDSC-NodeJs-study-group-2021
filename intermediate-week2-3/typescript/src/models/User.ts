@@ -45,11 +45,6 @@ const userSchema = new Schema<IUser>(
   { timestamps: true }
 );
 
-// Check if password entered for login is the same as the actual user's hashed password
-// userSchema.methods.matchPassword = async function (enteredPassword) {
-//   return await bcrypt.compare(enteredPassword, this.password);
-// };
-
 userSchema.pre('save', function (next) {
   if (!this.isModified('password')) {
     next();

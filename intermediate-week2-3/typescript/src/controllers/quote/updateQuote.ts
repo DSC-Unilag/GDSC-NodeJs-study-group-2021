@@ -17,11 +17,12 @@ const updateQuote = async (req: CustomRequest, res: Response, next: NextFunction
     const user = await User.findById(quote.user);
     if (user) {
       if (req.user && user.id !== req.user.id) {
+        console.log(user.id, req.user.id);
         return next(new AppError("You cannot update another person's quote", 400));
       }
       quote.quote = req.body.quote;
       await quote.save();
-      return res.json({ message: 'Quote successfully updated' });
+      return res.json({ message: 'Quote successfully updated', quote });
     } else {
       return next(new AppError("User doesn't exist", 400));
     }

@@ -1,12 +1,12 @@
 {
-  "name": "javascript",
+  "name": "typescript",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "dev": "nodemon src/server.ts",
     "prod": "NODE_ENV=production node server.js",
-    "test": "mocha src/tests --timeout 25000 --recursive  --exit",
+    "test": "mocha -r ts-node/register src/tests/test.ts --timeout 2500000 --recursive  --exit",
     "format": "prettier --write .",
     "build": "tsc -p ."
   },
@@ -26,6 +26,8 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/chai": "^4.3.0",
+    "@types/chai-http": "^4.2.0",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.6",

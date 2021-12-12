@@ -5,40 +5,38 @@ import { Response, NextFunction } from 'express';
 import { CustomRequest } from '../controllers/user/getUserInfo';
 
 const requireSignIn = async (req: CustomRequest, res: Response, next: NextFunction) => {
-  const authorization = req.headers.authorization;
+  let token;
+  try {
+    const authorization = req.headers.authorization;
 
-  if (!authorization) {
-    return next(new AppError('Authentication is required', 401));
-  }
-  if (!String(authorization).startsWith('Bearer')) {
-    return next(new AppError('Please use bearer token', 400));
-  }
+    if (authorization && authorization.startsWith('Bearer')) {
+      token = authorization.split(' ')[1];
+      jwt.verify(token, process.env.JWT_SECRET as string, async function (err, decoded) {
+        if (err) {
+          next(err);
+        } else if (decoded) {
+          const { _id } = decoded;
 
-  const [bearer, token] = authorization.split(' ');
+          try {
+            const user = await User.findById(_id);
 
-  /**
-   * verify the token and verify if user is logged in in or not
-   * If user is logged in then call the next() function to go to the next middleware
-   */
+            req.user = user as IUser; //normally this line would not work. thats why we used the custom.d.ts file.
+            //try looking in it to see what we did.
+          } catch (error) {
+            return next(error);
+          }
 
-  jwt.verify(token, process.env.JWT_SECRET as string, async function (err, decoded) {
-    if (err) {
-      next(err);
-    } else if (decoded) {
-      const { _id } = decoded;
-
-      try {
-        const user = await User.findById(_id);
-
-        req.user = user as IUser; //normally this line would not work. thats why we used the custom.d.ts file.
-        //try looking in it to see what we did.
-      } catch (error) {
-        return next(error);
-      }
-
-      next();
+          next();
+        }
+      });
     }
-  });
+  } catch (error) {
+    return next(error);
+  }
+
+  if (!token) {
+    return next(new AppError('No token found', 400));
+  }
 };
 
 export default requireSignIn;

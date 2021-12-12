@@ -8,11 +8,9 @@ import requireSignIn from '../middlewares/auth';
 
 const router = Router();
 
-router.route('/').get(requireSignIn, getQuotes).post(requireSignIn, createQuote);
-router
-  .route('/:id')
-  .get(requireSignIn, getSingleQuote)
-  .delete(requireSignIn, deleteQuote)
-  .put(requireSignIn, updateQuote);
+router.use(requireSignIn);
+
+router.route('/').get(getQuotes).post(createQuote);
+router.route('/:id').get(getSingleQuote).delete(deleteQuote).put(updateQuote);
 
 export default router;

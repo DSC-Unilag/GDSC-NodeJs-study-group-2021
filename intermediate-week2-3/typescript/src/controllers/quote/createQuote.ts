@@ -20,11 +20,12 @@ const createQuote = async (req: CustomRequest, res: Response, next: NextFunction
     }
 
     const newQuote = new Quote({
-      user: req.user,
+      user: req.user && req.user._id,
       quote,
     });
     await newQuote.save();
-    return res.json({ message: 'Quote successfully added!' });
+    // return res.status(201).json({ message: 'Quote successfully added!', newQuote });
+    return res.status(201).json({ message: 'Quote successfully added!' });
   } catch (error) {
     return next(error);
   }

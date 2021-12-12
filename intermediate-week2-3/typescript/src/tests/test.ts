@@ -27,15 +27,12 @@ let accessToken: string;
 let refreshToken: string;
 
 describe('Tests for the auth and user endpoints', () => {
-  before(async () => {
-    //delete al occurences of the test user from the db
-    await User.deleteMany({ email: USER.email });
-  });
-
-  after(async () => {
-    //delete al occurences of the test user from the db
-    await User.deleteMany({ email: USER.email });
-  });
+  // before(async () => {
+  //   //delete al occurences of the test quote from the db
+  //   await Quote.deleteMany({ quote: 'Always endevour to be the best' });
+  //   //delete al occurences of the test user from the db
+  //   await User.deleteMany({ email: USER.email });
+  // });
 
   it('Sign up with proper details should work properly', (done) => {
     chai
@@ -138,14 +135,11 @@ describe('Tests for the auth and user endpoints', () => {
 
 // Tests for quote endpoints
 describe('Tests for the quote endpoints', () => {
-  before(async () => {
-    //delete al occurences of the test quote from the db
-    await Quote.deleteMany({ quote: 'Always endevour to be the best' });
-  });
-
   after(async () => {
     //delete al occurences of the test quote from the db
     await Quote.deleteMany({ quote: 'Always endevour to be the best' });
+    //delete al occurences of the test user from the db
+    await User.deleteMany({ email: USER.email });
   });
 
   it('Should get all quotes', (done) => {
@@ -166,24 +160,23 @@ describe('Tests for the quote endpoints', () => {
       .get('/quote/' + '61b271ce80c9ff8ae6c82b43')
       .set('Authorization', `Bearer ${accessToken}`)
       .end((err, res) => {
-        assert.typeOf(res.body, 'object', 'create quotes endpoint should return an object');
-        assert.equal(res.status, 200, 'create quotes endpoint should have a 200 reponse');
+        assert.typeOf(res.body, 'object', 'get quote by id endpoint should return an object');
+        assert.equal(res.status, 200, 'get quote by id endpoint should have a 200 reponse');
         done();
       });
   });
 
   it('Should create a quote', (done) => {
-    let quote = new Quote({ user: USER._id, quote: 'Always endevour to be the best' });
-    quote.save();
     chai
       .request(server)
       .post('/quote')
       .set('Authorization', `Bearer ${accessToken}`)
-      .send({ quote: 'Eaters' })
+      .send({ quote: 'Always endevour to be the best' })
       .end((err, res) => {
         assert.equal(res.status, 201, 'create quote should have a 201 status');
         assert.typeOf(res.body, 'object', 'response body should be an object');
-        assert.property(res.body, 'message', 'get quotes endpoint should have message property');
+        assert.property(res.body, 'message', 'create quote endpoint should have message property');
+        assert.property(res.body, 'quote', 'create quote endpoint should have quote property');
         done();
       });
   });

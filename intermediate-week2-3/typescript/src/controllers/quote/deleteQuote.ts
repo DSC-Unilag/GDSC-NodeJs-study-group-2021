@@ -1,6 +1,6 @@
 import Quote from '../../models/Quote';
 import User from '../../models/User';
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import AppError from '../../error/appError';
 import { CustomRequest } from '../user/getUserInfo';
 

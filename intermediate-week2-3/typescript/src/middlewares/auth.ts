@@ -1,7 +1,7 @@
 import AppError from '../error/appError';
 import jwt from 'jsonwebtoken';
 import User, { IUser } from '../models/User';
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { CustomRequest } from '../controllers/user/getUserInfo';
 
 const requireSignIn = async (req: CustomRequest, res: Response, next: NextFunction) => {

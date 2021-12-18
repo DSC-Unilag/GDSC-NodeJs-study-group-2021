@@ -1,5 +1,5 @@
 import Quote from '../../models/Quote';
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import AppError from '../../error/appError';
 import { CustomRequest } from '../user/getUserInfo';
 
@@ -9,8 +9,8 @@ import { CustomRequest } from '../user/getUserInfo';
 const createQuote = async (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
     const { quote }: { quote: string } = req.body;
-    if (!quote) {
-      return next(new AppError('Please provide a quote', 400));
+    if (!quote || quote.length < 5) {
+      return next(new AppError('quote should be at least 5 characters', 400));
     }
 
     const existingQuote = await Quote.findOne({ quote });

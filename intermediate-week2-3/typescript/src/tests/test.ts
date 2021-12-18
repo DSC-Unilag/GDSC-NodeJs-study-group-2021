@@ -7,33 +7,27 @@ import mongoose from 'mongoose';
 
 chai.use(chaiHttp);
 
-const userId = mongoose.Types.ObjectId;
+const userId = new mongoose.Types.ObjectId();
+const quoteId = new mongoose.Types.ObjectId();
 
 const USER = {
   _id: userId,
-  firstName: 'Osemudiamen',
-  lastName: 'Itua',
-  email: 'testemail@gmail.com',
-  password: 'testPassword789##',
-  passwordConfirm: 'testPassword789##',
+  firstName: 'Test',
+  lastName: 'User',
+  email: 'test@gmail.com',
+  password: 'testtest',
+  passwordConfirm: 'testtest',
 };
 
-// const QUOTE = {
-//   user: USER._id,
-//   quote: 'Always endevour to be the best',
-// };
+const QUOTE = {
+  _id: quoteId,
+  quote: 'Always endevour to be the best',
+};
 
 let accessToken: string;
 let refreshToken: string;
 
 describe('Tests for the auth and user endpoints', () => {
-  // before(async () => {
-  //   //delete al occurences of the test quote from the db
-  //   await Quote.deleteMany({ quote: 'Always endevour to be the best' });
-  //   //delete al occurences of the test user from the db
-  //   await User.deleteMany({ email: USER.email });
-  // });
-
   it('Sign up with proper details should work properly', (done) => {
     chai
       .request(server)
@@ -94,7 +88,7 @@ describe('Tests for the auth and user endpoints', () => {
       });
   });
 
-  it('Refresh token endpoint shoult return the refresh token and a new accessToken', (done) => {
+  it('Refresh token endpoint should return the refresh token and a new accessToken', (done) => {
     setTimeout(() => {
       chai
         .request(server)
@@ -136,9 +130,9 @@ describe('Tests for the auth and user endpoints', () => {
 // Tests for quote endpoints
 describe('Tests for the quote endpoints', () => {
   after(async () => {
-    //delete al occurences of the test quote from the db
+    //delete all occurences of the test quote from the db
     await Quote.deleteMany({ quote: 'Always endevour to be the best' });
-    //delete al occurences of the test user from the db
+    //delete all occurences of the test user from the db
     await User.deleteMany({ email: USER.email });
   });
 
@@ -154,10 +148,31 @@ describe('Tests for the quote endpoints', () => {
       });
   });
 
-  it('Should get quote by id', (done) => {
+  it('Should create a quote', (done) => {
     chai
       .request(server)
-      .get('/quote/' + '61b271ce80c9ff8ae6c82b43')
+      .post('/quote')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send(QUOTE)
+      .end((err, res) => {
+        assert.equal(res.status, 201, 'create quote should have a 201 status');
+        assert.typeOf(res.body, 'object', 'response body should be an object');
+        assert.property(res.body, 'message', 'create quote endpoint should have message property');
+        assert.property(res.body, 'quote', 'create quote endpoint should have quote property');
+        assert.typeOf(res.body.message, 'string', 'message should be of type string');
+        assert.typeOf(res.body.quote, 'object', 'quote property should be an object');
+        done();
+      });
+  });
+
+  let quote: any = null;
+
+  it('Should get quote by id', (done) => {
+    quote = new Quote({ user: USER._id, quote: 'Always work hard' });
+    quote.save();
+    chai
+      .request(server)
+      .get(`/quote/${quote.id}`)
       .set('Authorization', `Bearer ${accessToken}`)
       .end((err, res) => {
         assert.typeOf(res.body, 'object', 'get quote by id endpoint should return an object');
@@ -166,18 +181,31 @@ describe('Tests for the quote endpoints', () => {
       });
   });
 
-  it('Should create a quote', (done) => {
+  it('Should update a product with a particular id', (done) => {
     chai
       .request(server)
-      .post('/quote')
+      .put(`/quote/${quote.id}`)
+      .send({ quote: 'Always try to be the best you can be' })
       .set('Authorization', `Bearer ${accessToken}`)
-      .send({ quote: 'Always endevour to be the best' })
       .end((err, res) => {
-        assert.equal(res.status, 201, 'create quote should have a 201 status');
-        assert.typeOf(res.body, 'object', 'response body should be an object');
-        assert.property(res.body, 'message', 'create quote endpoint should have message property');
-        assert.property(res.body, 'quote', 'create quote endpoint should have quote property');
+        assert.equal(res.status, 200, 'update quote endpoint should have a 200 status');
+        assert.property(res.body, 'message', 'update quote endpoint should return an object with a message property');
+        assert.typeOf(res.body.message, 'string', 'message should be of type string');
         done();
       });
+  });
+
+  it('Should delete a quote by a specified id', (done) => {
+    chai
+      .request(server)
+      .delete(`/quote/${quote.id}`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .end((err, res) => {
+        assert.equal(res.status, 200, 'delete quote endpoint should have a 200 status');
+        assert.typeOf(res.body, 'object', 'delete quote endpoint should return an object');
+        assert.property(res.body, 'message', 'delete quote endpoint should return an object with a message property');
+        assert.typeOf(res.body.message, 'string', 'message should be of type string');
+      });
+    done();
   });
 });

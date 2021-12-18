@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/server.ts",
     "prod": "NODE_ENV=production node server.js",
-    "test": "mocha -r ts-node/register src/tests/test.ts --timeout 2500000 --recursive  --exit",
+    "test": "mocha -r ts-node/register src/tests/test.ts --timeout 250000 --recursive  --exit",
     "format": "prettier --write .",
     "build": "tsc -p ."
   },

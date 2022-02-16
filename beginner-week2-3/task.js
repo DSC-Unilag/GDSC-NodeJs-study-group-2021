@@ -2,9 +2,13 @@ const URL = 'https://v2.jokeapi.dev/joke/Any?idRange=180';
 const fs = require('fs');
 const axios = require('axios');
 const isPrime = (num) => {
-  for(let i = 2, s = Math.sqrt(num); i <= s; i++)
-    if(num % i === 0) return false;
-  return num > 1;
+    for (let i = 2; i < num; i++) {
+      if (num % i === 0) {
+        return false;
+      }
+    }
+    return true;
+
   //complete the function to return true or false if a numnber is prime or not.
 };
 
@@ -12,10 +16,8 @@ const writeToFile = (a, b) => {
 
   for (let i = a; i <= b; i++) {
     if (isPrime(i)) {
-
-      fs.writeFile('./myFile.txt', i.toString(), (err) => {
+      fs.appendFile('./myFile.txt', i.toString()+"\n", (err) => {
         if (err) throw err;
-        else console.log('brooo')
       })
     }
   }
@@ -34,12 +36,8 @@ const writeToFile = (a, b) => {
 const getJoke = async () => {
   const result = await axios.get(URL);
   return result.data.joke;
-  // Using axios or any other method of your preference
   // make a get request to https://v2.jokeapi.dev/joke/Any?idRange=180
-  // it returns a json object.
-  // get the "joke" parameter in the json object.
-  //return that value.
-  // you might need to use async await.
+
 };
 
 module.exports = {

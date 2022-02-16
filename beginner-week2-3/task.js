@@ -1,9 +1,24 @@
 const URL = 'https://v2.jokeapi.dev/joke/Any?idRange=180';
+const fs = require('fs');
+const axios = require('axios');
 const isPrime = (num) => {
+  for(let i = 2, s = Math.sqrt(num); i <= s; i++)
+    if(num % i === 0) return false;
+  return num > 1;
   //complete the function to return true or false if a numnber is prime or not.
 };
 
 const writeToFile = (a, b) => {
+
+  for (let i = a; i <= b; i++) {
+    if (isPrime(i)) {
+
+      fs.writeFile('./myFile.txt', i.toString(), (err) => {
+        if (err) throw err;
+        else console.log('brooo')
+      })
+    }
+  }
   //write a function to check for all prime numbers between a and b (both inclusive) and write them to the file "myFile.txt"
   // e.g if a = 3 and b = 17
   // The content of myFile.txt will be
@@ -17,6 +32,8 @@ const writeToFile = (a, b) => {
 };
 
 const getJoke = async () => {
+  const result = await axios.get(URL);
+  return result.data.joke;
   // Using axios or any other method of your preference
   // make a get request to https://v2.jokeapi.dev/joke/Any?idRange=180
   // it returns a json object.

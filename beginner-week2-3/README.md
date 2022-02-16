@@ -8,25 +8,26 @@
 $ cd beginner-week2-3
 $ npm install
 ```
-  - To test your code
-  - Run in your terminal
 
-  ```bashD
-  $ npm test
-  ```
+- To test your code
+- Run in your terminal
 
-  ## TASKS
+```bashD
+$ npm test
+```
 
-  - Complete all functions in task.js
-  - Instructions on how to complete have been given in the functions. 
-  - To check your work run
+## TASKS
 
-  ```bash
-  $ npm test
-  ```
+- Complete all functions in task.js
+- Instructions on how to complete have been given in the functions.
+- To check your work run
 
-  - **NOTE**:
-    - Do not make changes to the test.js file
+```bash
+$ npm test
+```
+
+- **NOTE**:
+  - Do not make changes to the test.js file
 
 ## SUBMISSION
 

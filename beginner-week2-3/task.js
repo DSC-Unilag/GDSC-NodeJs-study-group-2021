@@ -19,19 +19,19 @@ const isPrime = (num) => {
 };
 
 const writeToFile = (a, b) => {
-  let primeNumArray = [];
+  let primeNumArray = "";
 
   if (a > b) {
     primeNumArray.push(`a ought to be less than b. Do the right thing boy, abi it is man or woman. Sha do the right thing`)
   } else {
     for ( let i = a; i <= b; i++ ) {
       if (isPrime(i)) {
-        primeNumArray.push(i);
+        primeNumArray = primeNumArray + `${i} \n`;
       }
     }
   }
 
-  fs.writeFile(path.join(__dirname, "myFile.txt"), primeNumArray.toString(), (err) => {
+  fs.writeFile(path.join(__dirname, "myFile.txt"), primeNumArray, (err) => {
     if (err) { throw err }
     console.log( `Prime Numbers between ${a} and ${b} written in myFile.txt` )
   })

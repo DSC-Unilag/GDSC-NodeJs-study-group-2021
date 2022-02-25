@@ -1,28 +1,45 @@
+const fs = require("fs");
+const path = require("path");
+const axios = require("axios");
+
 const URL = 'https://v2.jokeapi.dev/joke/Any?idRange=180';
+
+
 const isPrime = (num) => {
-  //complete the function to return true or false if a numnber is prime or not.
+  let prime = true;
+  if (num > 1) {
+      for ( let i = 2; i < num; i++ ) {
+          if ( num % i === 0 ) {
+              prime = false;
+              break
+          }
+      }
+  }
+  return prime
 };
 
 const writeToFile = (a, b) => {
-  //write a function to check for all prime numbers between a and b (both inclusive) and write them to the file "myFile.txt"
-  // e.g if a = 3 and b = 17
-  // The content of myFile.txt will be
-  // 3
-  // 5
-  // 7
-  // 11
-  // 13
-  // 17
-  // You will likely use the isPrime function above.
+  let primeNumArray = "";
+
+  if (a > b) {
+    primeNumArray.push(`a ought to be less than b. Do the right thing boy, abi it is man or woman. Sha do the right thing`)
+  } else {
+    for ( let i = a; i <= b; i++ ) {
+      if (isPrime(i)) {
+        primeNumArray = primeNumArray + `${i} \n`;
+      }
+    }
+  }
+
+  fs.writeFile(path.join(__dirname, "myFile.txt"), primeNumArray, (err) => {
+    if (err) { throw err }
+    console.log( `Prime Numbers between ${a} and ${b} written in myFile.txt` )
+  })
 };
 
 const getJoke = async () => {
-  // Using axios or any other method of your preference
-  // make a get request to https://v2.jokeapi.dev/joke/Any?idRange=180
-  // it returns a json object.
-  // get the "joke" parameter in the json object.
-  //return that value.
-  // you might need to use async await.
+  const { data } = await axios.get(URL);
+  return data.joke;
 };
 
 module.exports = {

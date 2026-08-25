@@ -1,6 +1,7 @@
 import { Schema, model, Model, Document } from 'mongoose';
 import { mongooseModels } from '../utils/constants';
 import validator from 'validator';
+import bcrypt from 'bcryptjs';
 
 const { USER } = mongooseModels;
 
@@ -43,6 +44,21 @@ const userSchema = new Schema<IUser>(
   },
   { timestamps: true }
 );
+
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password')) {
+    next();
+  }
+
+  const user = this;
+
+  bcrypt.genSalt(10, (err: unknown, salt: string) => {
+    bcrypt.hash(user.password, salt, (err: unknown, hash: string) => {
+      user.password = hash;
+      next();
+    });
+  });
+});
 
 const User: Model<IUser> = model<IUser>(USER, userSchema);
 

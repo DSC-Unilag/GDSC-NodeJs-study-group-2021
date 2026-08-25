@@ -1,23 +1,19 @@
 const mongoose = require('mongoose');
 const constants = require('../utils/constants');
 
-const { USER, TOKEN } = constants.mongooseModels;
+const { TOKEN } = constants.mongooseModels;
 
 const tokenSchema = mongoose.Schema(
   {
-    refreshToken: {
+    token: {
       type: String,
-      required: [true, 'refresh token is required'],
+      default: null,
+      required: [true, 'token is required!'],
+      // select: false,
     },
-
-    accessToken: {
-      type: String,
-      required: [true, 'access token is required'],
-    },
-
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: USER,
+      ref: 'User',
       required: [true, 'user id is required'],
     },
   },

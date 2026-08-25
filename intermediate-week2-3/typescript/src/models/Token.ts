@@ -8,7 +8,7 @@ export interface IToken extends Document {
   refreshToken: string;
   user: PopulatedDoc<IUser>;
 }
-const tokenSchema = new Schema(
+const tokenSchema = new Schema<IToken>(
   {
     refreshToken: {
       type: String,

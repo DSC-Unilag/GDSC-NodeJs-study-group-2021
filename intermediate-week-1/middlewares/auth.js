@@ -1,35 +1,26 @@
-const AppError = require('../error/appError');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 exports.requireSignIn = async (req, res, next) => {
-  const authorization = req.headers.authorization;
+  let token;
+  try {
+    const authorization = req.headers.authorization;
 
-  if (!authorization) {
-    return next(new AppError('Authentication is required', 401));
-  }
-  if (!String(authorization).startsWith('Bearer')) {
-    return next(new AppError('Please use bearer token', 400));
-  }
-
-  const [bearer, token] = authorization.split(' ');
-
-  /**
-   * verify the token and verify if user is logged in in or not
-   * If user is logged in then call the next() function to go to the next middleware
-   */
-
-  jwt.verify(token, process.env.JWT_SECRET, async function (err, decoded) {
-    if (err) {
-      next(err);
+    if (authorization && authorization.startsWith('Bearer')) {
+      token = authorization.split(' ')[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      res.user = await User.findById(decoded._id);
+      next();
     }
+  } catch (error) {
+    return res.mongoError(error);
+  }
 
-    const { id } = decoded;
-
-    const user = await User.findById(id);
-
-    req.user = user;
-
-    next();
-  });
+  if (!token) {
+    res.sendApiError({
+      status: 401,
+      title: 'Not authorized',
+      detail: 'Not authorized, no token',
+    });
+  }
 };

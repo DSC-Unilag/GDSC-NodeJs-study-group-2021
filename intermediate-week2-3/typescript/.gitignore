@@ -10,3 +10,4 @@ settings.json
 .nyc_output
 coverage
 .idea/
+request.rest
